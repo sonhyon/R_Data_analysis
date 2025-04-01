@@ -26,3 +26,18 @@ math <- c(50,60,100,20)
 df_midterm <- data.frame(english, math) #데이터프레임: 행과 열로 구성된 2차원 데이터 구조
 
 
+library(readxl)
+setwd("C:/Users/sonhy/OneDrive/바탕 화면/코딩/R/개념") #파일 경로 설정
+getwd()
+
+df_exam <- read_excel("excel_exam.xlsx")
+df_exam_sheet <- read_excel("excel_exam_sheet.xlsx", sheet=3) #시트 설정도 가능
+df_csv_exam <- read.csv("csv_exam.csv") #csv 파일 불러오기
+
+df_midterm <- data.frame(english = c(90,80,60,70),
+                         math = c(50,60,100,20))
+write.csv(df_midterm, file = "df_midterm.csv") #csv 파일로 저장하기
+
+saveRDS(df_midterm, file="df_midterm.rds") #RDS 파일로 저장하기
+df_midterm <- readRDS("df_midterm.rds") #RDS 파일 불러오기
+df_midterm
