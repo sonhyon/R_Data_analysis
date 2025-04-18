@@ -1,43 +1,30 @@
-#03. 데이터분석을 위한 연장 챙기기
-var3 <- seq(1, 5)
-var3
+#변수
+var1 <- c(1,2,5,7,8)
+var2 <- c(1:5)
+var3 <- seq(1, 5) #seq() 연속함수
+var4 <- seq(1, 10, by=2)
 
+#함수
 x <- c(1,2,3)
-mean(x)
-max(x)
-min(x)
+mean(x) ; max(x) ; min(x)
 
-str5 <- c("Hello!", "World", "is", "good")
-str5
-paste(str5, collapse = ",") #쉼표를 구분자로 str5의 단어들 하나로 합치기
-paste(str5, collapse = " ") #한칸씩 띄어쓰기
+str5 <- c("Hello", "World", "is", "good!")
+paste(str5, collapse=",") #str()은 여러 문자를 합침
+paste(str5, collapse=" ")
 
-
+#패키지 설치 -> 패키지 로드하기 -> 함수 사용하기
+install.packages("ggplot2")
 library(ggplot2)
-x <- c('a', 'b', 'b', 'c')
-qplot(x) #빈도 막대 그래프
-qplot(data=mpg, x=drv, y=hwy, geom="boxplot", colour=drv) #geom은 박스형태, drv별 색 표현
 
+x <- c("a", "a", "b", "c")
+qplot(x) #빈도 막대그래프 출력
+qplot(data=mpg, x=drv, y=hwy, geom="boxplot", colour=drv) #상자그림형태, drv별 색 표현
 
-#04. 데이터프레임의 세계로
+#데이터 프레임 : 행과 열로 구성된 사각형 모양의 표
 english <- c(90,80,60,70)
 math <- c(50,60,100,20)
+df_midterm <- data.frame(english, math) #데이터프레임 만들기
+df_midterm <- data.frame(english=c(90,80,60,70), #데이터프레임 한 번에 만들기
+                         math=c(50,60,100,20),
+                         class=c(1,1,2,2))
 
-df_midterm <- data.frame(english, math) #데이터프레임: 행과 열로 구성된 2차원 데이터 구조
-
-
-library(readxl)
-setwd("C:/Users/sonhy/OneDrive/바탕 화면/코딩/R/개념") #파일 경로 설정
-getwd()
-
-df_exam <- read_excel("excel_exam.xlsx")
-df_exam_sheet <- read_excel("excel_exam_sheet.xlsx", sheet=3) #시트 설정도 가능
-df_csv_exam <- read.csv("csv_exam.csv") #csv 파일 불러오기
-
-df_midterm <- data.frame(english = c(90,80,60,70),
-                         math = c(50,60,100,20))
-write.csv(df_midterm, file = "df_midterm.csv") #csv 파일로 저장하기
-
-saveRDS(df_midterm, file="df_midterm.rds") #RDS 파일로 저장하기
-df_midterm <- readRDS("df_midterm.rds") #RDS 파일 불러오기
-df_midterm
