@@ -13,3 +13,12 @@ mpg <- as.data.frame(ggplot2::mpg) #ggplot2의 mpg데이터를 데이터프레�
 install.packages("dplyr")
 library(dplyr)
 rename(df_new, v2=var2) #var2를 v2로 수정
+
+#파생변수 만들기
+summary() #요약 통계량 산출
+hist() #히스토그램 생성
+ifesle(mpg$total >= 20, "pass", "fail") #조건에 맞으면 pass, 맞지 않으면 fail
+table() 빈도표 생성
+qplot() #ggplot2 함수임, 빈도 막대 그래프
+ifelse(mpg$total >= 30, "A",
+      ifelse(mpg$total >= 20, "B", "C")) #중첩 조건문
