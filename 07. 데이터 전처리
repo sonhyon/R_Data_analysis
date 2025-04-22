@@ -1,0 +1,13 @@
+#결측치 찾기
+is.na(df) #결측치 확인
+table(is.na(df)) #결측치 빈도 출력
+
+#결측치 제거
+df %>% filter(is.na(score)) #NA인 데이터만 출력
+df %>% filter(!is.na(score)) #NA 제거 후 출력
+na.omit(df) #모든 변수에 결측치 없는 데이터 추출
+
+mean(df$score, na.rm=T) #결측치 제거하고 평균 산출
+exam[c(3,8,5), "math"] <- NA #결측치 할당하기
+exam %>% summarise(mean_math = mean(math, na.rm=T)) #결측치 제거 후 평균 구하기
+exam$math <- ifelse(is.na(exam$math), 55, exam$math) #조건문을 활용한 결측값 제거
