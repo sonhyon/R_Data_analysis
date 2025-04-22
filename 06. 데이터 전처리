@@ -68,3 +68,8 @@ mpg %>%
   group_by(manufacturer, drv) %>% #각 집단별로 다시 집단 나누기
   summarise(mean_cty = mean(cty)) %>%
   head(10)
+
+#데이터 합치기
+total <- left_join(test1, test2, by="id") #가로로 합치기
+group_all <- bind_rows(group_a, group_b) #세로로 합치기
+*세로로 합칠 때는 변수명이 같아야 하는데 rename()를 사용해 맞출 수 있음
