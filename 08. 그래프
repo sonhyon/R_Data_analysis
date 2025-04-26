@@ -27,3 +27,6 @@ ggplot(data = mpg, aes(x=drv)) + geom_bar() #빈도막대그래프는 geom_col()
 
 #선 그래프
 ggplot(data=economics, aes(x=date, y=unemploy)) + geom_line() #시계열 그래프
+
+#상자 그림
+ggplot(data=mpg, aes(x=drv, y=hwy)) + geom_boxplot() #상자 그림 만들기
