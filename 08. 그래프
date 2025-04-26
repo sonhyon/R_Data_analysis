@@ -24,3 +24,6 @@ ggplot(data = df_mpg, aes(x=reorder(drv, -mean_hwy), y=mean_hwy)) + geom_col() #
 
 2. 빈도 막대 그래프 만들기
 ggplot(data = mpg, aes(x=drv)) + geom_bar() #빈도막대그래프는 geom_col() 대신 geom_bar()를 사용
+
+#선 그래프
+ggplot(data=economics, aes(x=date, y=unemploy)) + geom_line() #시계열 그래프
