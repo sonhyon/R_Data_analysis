@@ -30,3 +30,4 @@ ggplot(data=economics, aes(x=date, y=unemploy)) + geom_line() #시계열 그래�
 
 #상자 그림
 ggplot(data=mpg, aes(x=drv, y=hwy)) + geom_boxplot() #상자 그림 만들기
+*아랫수염, 1사분위수, 2사분위수, 3사분위수, 윗수염, 극단치
