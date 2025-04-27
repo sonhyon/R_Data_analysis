@@ -1,0 +1,56 @@
+#foreign 패키지는 SPSS, SAS, STATA 등 다양한 통계분석 소프트웨어 파일을 불러올 수 있다
+install.packages("foreign")
+library(foreign)
+library(dplyr)
+library(ggplot2)
+library(readxl)
+
+raw_welfare <- read.spss(file = "koweps_hpc10_2015_beta1.sav",
+                          to.data.frame = T)
+welfare <- raw_welfare
+
+#데이터 구조와 특징을 파악
+head(welfare)
+tail(welfare)
+View(welfare)
+dim(welfare)
+str(welfare)
+summary(welfare)
+
+#변수명 바꾸기
+welfare <- rename(welfare.
+                  sex = h10_g3,
+                  birth = h10_g4,
+                  marriage = h10_g10,
+                  religion = h10_g11,
+                  income = p1002_8aq1,
+                  code_job = h10_eco9,
+                  code_region = h10_reg7)
+
+#[전처리]
+#변수 검토하기
+class(welfare$sex)
+table(welfare$sex) #범주 확인
+
+#전처리
+table(welfare$sex) #이상치 확인
+welfare$sex <- ifelse(welfare$sex == 9, NA, welfare$sex) #이상치 결측 처리
+table(is.na(welfare$sex))
+welfare$sex <- ifelse(welfare$sex == 1, "male", "femail")
+table(welfare$sex)
+
+class(welfare$income)
+summary(welfare$income) #월급변수는 연속변수이기 때문에 table()보다는 summary()로 특징을 파악해야 함
+qplot(welfare$income)
+qplot(welfare$income) + xlim(0, 1000)
+summary(welfare$income) #이상치 확인
+welfare$income <- ifelse(welfare$income %in% c(0, 9999), NA, welfare$income) #이상 결측 처리
+talbe(is.na(welfare$income)) #결측치 확인
+
+#Q. 성별에 따른 월급 차이 분석하기
+sex_income <- welfare %>%
+  filter(!is.na(income)) %>%
+  group_by(sex) %>%
+  summarise(mean_income = mean(income))
+
+ggplot(data = sex_income, aes(x=sex, y=mean_income)) + geom_col() #막대그래프 출력
