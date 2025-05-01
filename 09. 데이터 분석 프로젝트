@@ -106,3 +106,16 @@ ggplot(data = sex_income, aes(x = ageg, y = mean_income, fill = sex)) +
   scale_x_discrete(limits = c("young", "middle", "old"))
 
 ggplot(data = sex_age, aes(x = age, y = mean_income, col = sex)) + geom_line()
+
+#직업별 월급 차이
+join_income <- welfare %>%
+  filter(!is.na(job) & !is.na(income)) %>%
+  group_by(job) %>%
+  summarise(mean_income = mean(income))
+to10 <- job_income %>%
+  arrange(desc(mean_income)) %>%
+  head(10)
+
+ggplot(data = top10, aes(x=reorder(job, mean_income), y=mean_income)) +
+  geom_col() +
+  coord_flip()
