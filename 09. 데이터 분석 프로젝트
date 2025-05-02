@@ -119,3 +119,27 @@ to10 <- job_income %>%
 ggplot(data = top10, aes(x=reorder(job, mean_income), y=mean_income)) +
   geom_col() +
   coord_flip()
+
+#성별 직업 빈도
+job_male <- welfare %>% #남성 직업 빈도 상위 10개 추출
+  filter(!is.na(job) & sex == 'male') %?%
+  group_by(job) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  head(10)
+
+ggplot(data = job_male, aes(x=reorder(job, n), y=n)) + #남성 직업 빈도 상위 10개 직업
+  geom_col() +
+  coord_flip()
+
+*geom_col() : 원자료를 이용해 막대 그래프를 만들 때 시용 / geom_col() : 요약표를 이용해 막대 그래프를 만들 때 사용
+
+#종교 유무에 따른 이혼율
+religion_marriage <- welfare %>% #count() 함수를 이용/ 집단별 빈도를 구하는 함수이다.
+  filter(!is.na(group_marriage)) %>%
+  count(religion, group_marriage) %>%
+  group_by(religion) %>%
+  mutate(pct = round(n/sum(n)*100, 1))
+
+ggplot(data=df_divorce, aes(x=ageg, y=pct, fill=religion)) + #fill 파라미터를 통해 막대 색깔을 다르게 표현
+  geom_col(position = 'dodge') #position = 'dodge' 를 통해 막대를 분리한다
