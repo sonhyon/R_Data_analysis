@@ -135,9 +135,9 @@ ggplot(data = job_male, aes(x=reorder(job, n), y=n)) + #남성 직업 빈도 상
 *geom_bar() : 원자료를 이용해 막대 그래프를 만들 때 시용 / geom_col() : 요약표를 이용해 막대 그래프를 만들 때 사용
 
 #종교 유무에 따른 이혼율
-religion_marriage <- welfare %>% #count() 함수를 이용/ 집단별 빈도를 구하는 함수이다.
+religion_marriage <- welfare %>% 
   filter(!is.na(group_marriage)) %>%
-  count(religion, group_marriage) %>%
+  count(religion, group_marriage) %>% #count() 함수를 이용/ 집단별 빈도를 구하는 함수이다.
   group_by(religion) %>%
   mutate(pct = round(n/sum(n)*100, 1))
 
@@ -153,11 +153,11 @@ ggplot(data = region_ageg, aes(x=region, y=pct, fill=ageg)) +
 list_order_old <- region_ageg %>% #노년층 비율 내림차순 정렬
   filter(ageg == "old") %>%
   arrange(pct)
-order <- list_order$region #지역명 순서 변수 만들기
+order <- list_order_old$region #지역명 순서 변수 만들기
 
 2.
 region_ageg$ageg <- factor(region_ageg$ageg, #factor 타입으로 변환시킴
-                            level = c("old", "middle", "young")) #level 파라미터를 이용
+                            level = c("old", "middle", "young")) #level 파라미터를 이용해 순서를 지정
 
 ggplot(data=region_ageg, aes(x=region, y=pct, fill=ageg)) +
   geom_col() +
