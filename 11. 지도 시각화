@@ -30,3 +30,37 @@ ggChoropleth(data = crime, #지도에 표현할 데이터
                 map_id = state), #지역 기준 변수
             map = states_map, #지도 데이터
             interactive = T) #마우스 움직임에 반응하는 인터랙티브이다
+
+[대한민국 시도별 인구 단계 구분도 만들기]
+1. 패키지 준비하기
+install.packages("stringi")
+install.packages("devtools")
+devtools::install_github("cardiommon/kormaps2014")
+library(kormaps2014)
+
+2. 대한민국 시도별 인구 데이터 준비하기
+str(korpop1) #시도별 인구 데이터를 살펴보기
+
+3. 변수명을 영문자로 수정(한글로 되어있으면 오류가 발생할 수 있음)
+library(dplyr)
+korpop1 <- rename(korpop1, pop=총인구_명, name=행정구역별_읍면동)
+
+4. 대한민국 시도 지도 데이터 준비하기
+str(kormap1) 시도별 지도 데이터 이용
+
+5. 단계 구분도 만들기
+ggChoropleth(data = korpop1,     #지도에 표현할 데이터
+            aes(fill = pop,      #색깔로 표현할 변수
+                map_id = code,   #지역 기준 변수
+                tooltip = name), #지도 위에 표시할 지역명
+            map = kormap1,       #지도 데이터
+            interactive = T)     #인터랙티브
+
+[대한민국 시도별 결핵 환자 수 단계 구분도 만들기]
+str(tbc) #tbc 데이터의 NewPts(결핵 환자 수) 변수를 이용할 거임
+ggChoropleth(data = tbc,            #지도에 표현할 데이터
+            aes(fill = NewPts,      #색깔로 표현할 변수
+                map_id = code,      #지역 기준 변수
+                tooltip = name),    #지도 위에 표시할 지역명
+            map = kormap1,          #지도 데이터
+            interactive = T)        #인터랙티브
