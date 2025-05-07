@@ -36,7 +36,7 @@ col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFFF", "#77AADD", "#4477AA"
 corrplot(car_cor,
         method = "color",
         col = col(200),
-        type = "lower",
+        type = "lower",          #왼쪽 아래 행렬만 표시
         order = "hclust",
         addCoef.col = "black",
         tl.col = "black",
