@@ -1,24 +1,29 @@
-#데이터를 파악할 때 사용하는 함수들
-head() #데이터 앞부분 출력
-tail() #데이터 뒷부분 출력
-View() #뷰어 창에서 데이터 확인
-dim() #데이터 차원 출력
-str() #데이터 속성 출력
-summary() #요약 통계량 출력
-*summary() 내에서는 최솟값, 1사분위수, 중앙값, 평균, 3사분위수, 최댓값이 있음
+#1. 데이터 구조 파악 함수
+head(데이터)        # 데이터 앞부분 확인 (기본 6행)
+tail(데이터)        # 데이터 뒷부분 확인
+View(데이터)        # RStudio 뷰어 창에서 데이터 확인
+dim(데이터)         # 데이터의 행과 열 개수 출력
+str(데이터)         # 데이터 구조 및 변수 형식 확인
+summary(데이터)     # 변수별 요약 통계량 (최솟값, 1Q, 중앙값, 평균, 3Q, 최댓값)
 
-mpg <- as.data.frame(ggplot2::mpg) #ggplot2의 mpg데이터를 데이터프레임 형태로 불러오기
+mpg <- as.data.frame(ggplot2::mpg)  # ggplot2의 mpg 데이터를 데이터프레임으로 불러오기
 
-#변수명 바꾸기
-install.packages("dplyr")
-library(dplyr)
-rename(df_new, v2=var2) #var2를 v2로 수정
 
-#파생변수 만들기
-summary() #요약 통계량 산출
-hist() #히스토그램 생성
-ifesle(mpg$total >= 20, "pass", "fail") #조건에 맞으면 pass, 맞지 않으면 fail
-table() 빈도표 생성
-qplot() #ggplot2 함수임, 빈도 막대 그래프
-ifelse(mpg$total >= 30, "A",
-      ifelse(mpg$total >= 20, "B", "C")) #중첩 조건문
+#2. 변수명 바꾸기 (dplyr 패키지 사용)
+install.packages("dplyr")  # 최초 한 번 설치
+library(dplyr)             # 패키지 로드
+
+rename(df_new, v2 = var2)  # var2 변수명을 v2로 변경
+
+
+#3. 파생변수 만들기
+mpg$test <- ifelse(mpg$total >= 20, "pass", "fail")  # 조건: 연비 20 이상이면 pass
+mpg$grade <- ifelse(mpg$total >= 30, "A",
+              ifelse(mpg$total >= 20, "B", "C"))  # 조건에 따라 A/B/C 부여
+
+
+#4. 분포 및 빈도 확인
+summary(mpg$total)   # 파생 변수의 요약 통계량
+hist(mpg$total)      # 히스토그램 (분포 확인)
+table(mpg$test)      # 범주형 변수의 빈도표
+qplot(mpg$test)      # 빈도 막대그래프
