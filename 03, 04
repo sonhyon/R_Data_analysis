@@ -11,6 +11,7 @@ mean(x)         # 평균
 max(x)          # 최댓값
 min(x)          # 최솟값
 
+
 #3. 문자열 처리
 str5 <- c("Hello", "World", "is", "good!")
 paste(str5, collapse = ",")       # "Hello,World,is,good!"
