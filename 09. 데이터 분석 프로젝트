@@ -110,7 +110,7 @@ top10 <- job_income %>%
 
 ggplot(top10, aes(x = reorder(job, mean_income), y = mean_income)) +
   geom_col() +
-  coord_flip()
+  coord_flip()         #x축과 y축을 뒤바꾸는 함수
 
 
 12. 성별 직업 빈도
@@ -124,6 +124,7 @@ job_male <- welfare %>%
 ggplot(job_male, aes(x = reorder(job, n), y = n)) +
   geom_col() +
   coord_flip()
+
 
 13. 종교 유무에 따른 이혼율
 religion_marriage <- welfare %>%
