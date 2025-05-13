@@ -1,31 +1,46 @@
-#결측치 찾기
-is.na(df) #결측치 확인
-table(is.na(df)) #결측치 빈도 출력
+#1. 결측치(Missing Values) 처리
 
-#결측치 제거
-df %>% filter(is.na(score)) #NA인 데이터만 출력
-df %>% filter(!is.na(score)) #NA 제거 후 출력
-na.omit(df) #모든 변수에 결측치 없는 데이터 추출
+결측치 확인
+is.na(df)              # 데이터 프레임 내 NA 여부를 TRUE/FALSE로 출력
+table(is.na(df))       # 전체 결측치 개수 빈도 확인
 
-mean(df$score, na.rm=T) #결측치 제거하고 평균 산출
-exam[c(3,8,5), "math"] <- NA #결측치 할당하기
-exam %>% summarise(mean_math = mean(math, na.rm=T)) #결측치 제거 후 평균 구하기
-exam$math <- ifelse(is.na(exam$math), 55, exam$math) #조건문을 활용한 결측값 제거
+결측치가 있는 데이터 추출
+df %>% filter(is.na(score))        # score 변수에 결측치가 있는 행만 추출
 
-#이상치 정제하기
-table(outlier$sex) #이상치 확인하기
-oulier$sex <- ifelse(outlier$sex == 3, NA, outlier$sex) #결측 처리하기
+결측치 제거
+df %>% filter(!is.na(score))       # score에 결측치가 없는 행만 추출
+na.omit(df)                        # 모든 변수에서 결측치가 없는 행만 추출
 
+결측치를 제외한 통계값 계산
+mean(df$score, na.rm = TRUE)       # 결측치를 제외하고 평균 계산
+
+결측치 직접 생성
+exam[c(3,8,5), "math"] <- NA        # 특정 행에 결측치 할당
+
+결측치를 대체하여 처리
+exam$math <- ifelse(is.na(exam$math), 55, exam$math)  # NA를 55로 대체
+
+
+#2. 이상치(Outliers) 처리
+
+범주형 변수의 이상치 처리
+table(outlier$sex)                                 # sex 변수의 값 분포 확인
+outlier$sex <- ifelse(outlier$sex == 3, NA, outlier$sex)  # 이상값을 NA로 처리
+
+이상치 제거 후 그룹별 통계
 outlier %>%
-  filter(!is.na(sex)  & !is.na(score)) %>% #!is.na로 결측치 제거
+  filter(!is.na(sex) & !is.na(score)) %>%          # 결측치 제거
   group_by(sex) %>%
-  summarise(meand_score = mean(score))
+  summarise(mean_score = mean(score))
 
-boxplot(mpg$hwy) #상자그림 출력
-boxplot(mpg$hwy)$stats #상자 그림 통계치 출력
+연속형 변수의 이상치 확인
+boxplot(mpg$hwy)              # hwy 변수의 상자그림
+boxplot(mpg$hwy)$stats        # 상자그림의 통계 수치 (최소, Q1, 중앙값, Q3, 최대값)
 
-mpg$hwy <- ifelse(mpg$hwy < 12 | mpg$hwy > 37, NA, mpg$hwy) #이상값에 결측치 부여
-table(is.na(mpg$hwy)) #결측치 확인
+이상치 처리 (NA로 대체)
+mpg$hwy <- ifelse(mpg$hwy < 12 | mpg$hwy > 37, NA, mpg$hwy)  # 12 미만, 37 초과를 NA 처리
+
+이상치 처리 후 그룹별 평균
 mpg %>%
   group_by(drv) %>%
-  summarise(mean_hwy = mean(hwy, na.rm=T) #na.rm으로 결측치를 제거하고 평균을 구함
+  summarise(mean_hwy = mean(hwy, na.rm = TRUE))   # 결측치 제외 후 평균 계산
