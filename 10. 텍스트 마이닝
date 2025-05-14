@@ -1,123 +1,93 @@
-KoNLP패키지를 이용하면 한글 텍스트의 형태소를 분석할 수 있습니다
-KoNLP 패키지는 자바와 rJava패키지가 설치되어 있어야 사용할 수 있습니다
-
-1.자바와 rJava 패키지 설치하기
+[KoNLP 패키지 설치 및 준비]
+1. 자바 및 rJava 설치
 install.packages("multilinguer")
 library(multilinguer)
-install_jdk()
+install_jdk()  # Java 설치
 
-2.KoNLP 의존성 패키지 설치하기
-install.packages(c("stringr", "hash", "tau", "Sejong", "RSQLLite", "devtools"), type="binary")
+2. KoNLP 의존성 패키지 설치
+install.packages(c("stringr", "hash", "tau", "Sejong", "RSQLite", "devtools"), type="binary")
 
-3.KoNLP 패키지 설치하기
+3. KoNLP 설치 및 불러오기
 install.packages("remotes")
-remotes::install_github("haven-jeon/KoNLP",
-                        upgrade = "never",
-                        INSTALL_opts = c("--no-multiarch"))
+remotes::install_github("haven-jeon/KoNLP", upgrade = "never", INSTALL_opts = c("--no-multiarch"))
 library(KoNLP)
 
-4.형태소 사전 설정하기
-useNIADic() #형태소 분석을 할 때 NIA 사전을 사용하도록 useNUADic()을 실행합니다
+4. 형태소 사전 설정
+useNIADic()  # NIA 사전 사용 설정
 
-5.데이터 준비하기
-txt <- readlines("hiphop.txt")
 
-6.특수문제 제거하기
-install.packages("stringr")
-library(stringr) 
-txt <- str_replace_all(txt, "\\w", " ") #특수문자 제거
+[텍스트 마이닝 실습 - 힙합 가사 예제]
+1. 데이터 불러오기
+txt <- readLines("hiphop.txt")
 
------------가장 많이 사용된 단어 알아보기------------
-1.명사 추출하기
-extractNoun("대한민국의 영토는 한반도의 그 부속도서로 한다")
+2. 특수문자 제거
+library(stringr)
+txt <- str_replace_all(txt, "\\w", " ")  # 특수문자 제거
 
-2.빈도표 만들기
-nouns <- extractNoun(txt) #가사에서 명사 추출
-wordcount <- table(unlist(nouns)) #추출한 명사 list를 문자열 벡터를 변환, 단어별 빈도표 생성
-df_word <- as.data.frame(wordcount, stringsAsFactors = F) #데이터 프레임으로 변환
-df_word <- rename(df_word, #변수명 수정
-                  word = Var1,
-                  freq = Freq)
+3. 명사 추출 및 단어 빈도 분석
+nouns <- extractNoun(txt)
+wordcount <- table(unlist(nouns))
+df_word <- as.data.frame(wordcount, stringsAsFactors = FALSE)
+df_word <- rename(df_word, word = Var1, freq = Freq)
+df_word <- filter(df_word, nchar(word) >= 2)  # 2글자 이상 필터링
 
-3.자주 사용된 단어 빈도표 만들기
-df_word <- filter(df_word, nchar(word) >= 2) #두 글자 이상 단어 추출
+4. 상위 단어 추출
+top_20 <- df_word %>% arrange(desc(freq)) %>% head(20)
 
-4.빈도 순으로 정렬
-top_20 <- df_word %>%
-  arrange(desc(freq)) %>%
-  head(20)
 
------------워드 클라우드 만들기--------------
-1.패키지 준비하기
+[워드 클라우드 시각화]
 install.packages("wordcloud")
 library(wordcloud)
 library(RColorBrewer)
 
-2.단어 색상 목록 만들기
-pal <- brewer.pal(8, "Dark2") #Dark2 색상 목록에서 8개 색상 추출
-pal <- brower.pal(9, "Blues")[5:9] #다른 색상 설정
-
-3.난수 고정하기
+pal <- brewer.pal(8, "Dark2")
 set.seed(1234)
 
-4.워드 클라우드 만들기
-wordcloud(words = df_word$word, #단어
-          freq = df_word$freq, #빈도
-          min.freq = 2, #최소 단어 빈도
-          max.words = 200, #표현 단어 수
-          random.order = F, #고빈도 단어 중앙 배치
-          rot.per = .1, #회전 단어 비율
-          scale = c(4, 0.3), #단어 크기 범위
-          colors = pal) #색상 목록
+wordcloud(words = df_word$word,
+          freq = df_word$freq,
+          min.freq = 2,
+          max.words = 200,
+          random.order = FALSE,
+          rot.per = 0.1,
+          scale = c(4, 0.3),
+          colors = pal)
 
 
-#[국정원 트윗 텍스트 마이닝]
-1.데이터 준비하기
-twitter <- read.csv("twitter.csv",
-                    header = T,
-                    fileEncoding = "UTF-8")
-twitter <- rename(twitter,
-                  no = 번호,
-                  id = 계정이름,
-                  date = 작성일,
-                  tw = 내용)
-twitter$tw <- str_replace_all(twitter$tw, "\\w", " ") #특수문자 제거
+[국정원 트윗 텍스트 마이닝]
+1. 데이터 불러오기 및 전처리
+twitter <- read.csv("twitter.csv", header = TRUE, fileEncoding = "UTF-8")
+twitter <- rename(twitter, no = 번호, id = 계정이름, date = 작성일, tw = 내용)
+twitter$tw <- str_replace_all(twitter$tw, "\\w", " ")
 
-2.단어 빈도표 만들기
-nouns <- extractNoun(twitter$tw) #트윗에서 명사추출
-wordcount <- table(inlist(nouns)) #추출한 명사 list를 문자열 벡터로 변환, 단어별 빈도표 생성
-df_word <- as.data.frame(wordcount) #데이터프레임으로 변환
-df_word <- rename(df_word,
-                  word = Var1,
-                  freq = Freq)
+2. 명사 추출 및 빈도 분석
+nouns <- extractNoun(twitter$tw)
+wordcount <- table(unlist(nouns))
+df_word <- as.data.frame(wordcount)
+df_word <- rename(df_word, word = Var1, freq = Freq)
+df_word <- filter(df_word, nchar(word) >= 2)
 
-3.상위 20 추출
-df_word <- filter(df_word, nchar(word) >= 2) #두 글자 이상 단어만 추출
-top20 <- df_word %>%
-  arrange(desc(freq)) %>%
-  head(20)
+3. 상위 20개 단어 추출 및 시각화
+top20 <- df_word %>% arrange(desc(freq)) %>% head(20)
 
-4.단어 빈도 막대 그래프 만들기
 library(ggplot2)
-order <- arrange(top20, freq)$word #빈도 순서 변수 생성
+order <- arrange(top20, freq)$word
 
-ggplot(data = top20, aes(x=word, y=freq)) +
+ggplot(data = top20, aes(x = word, y = freq)) +
   ylim(0, 2500) +
   geom_col() +
   coord_flip() +
-  scale_x_discrete(limit = order) + #빈도순 막대 정렬
-  geom_text(aes(label=freq), hjust=0.1) #빈도 표시
+  scale_x_discrete(limit = order) +
+  geom_text(aes(label = freq), hjust = 0.1)
 
-5.워드 클라우드 만들기
-pal <- brower.pal(9, "Blues")[5:9] #색상 목록 생성
-set.seed(1234) #난수 고정
+4. 트윗 워드 클라우드
+pal <- brewer.pal(9, "Blues")[5:9]
+set.seed(1234)
 
-wordcloud(word = df_word$word, #단어
-          freq = df_word$freq, #빈도
-          min.freq = 10, #최소 단어 빈도
-          max.words = 150, #표현 단어 수
-          random.order = F, #고빈도 단어 중앙 배치
-          rot.per = 0, #회전 단어 비율 
-          scale = c(6, 0.5), #단어 크기 범위
-          colors = pal) #색상 목록
-
+wordcloud(word = df_word$word,
+          freq = df_word$freq,
+          min.freq = 10,
+          max.words = 150,
+          random.order = FALSE,
+          rot.per = 0,
+          scale = c(6, 0.5),
+          colors = pal)
