@@ -1,56 +1,54 @@
 인터랙티브란?
-- 마우스 움직임에 반응하며 실시간으로 형태가 변하는 그래프
-- 그래프를 HTML 포맷으로 저장하면, 일반 사용자들도 웹 브라우저를 이용해 그래프를 조작할 수 있다
+*마우스 움직임에 반응하며 실시간으로 형태가 변하는 그래프
+*HTML 포맷으로 저장 시, 일반 사용자도 웹 브라우저에서 그래프를 조작할 수 있음
 
-[plotly 패키지로 인터랙티브 그래프 만들기]
-1. 패키지 준비하기
+[plotly 패키지를 활용한 인터랙티브 그래프]
+1. 패키지 설치 및 불러오기
 install.packages("plotly")
 library(plotly)
-
-2. ggplot2로 그래프 만들기
 library(ggplot2)
-p <- ggplot(data=mpg, aes(x=displ, y=hwy, col=drv)) + geom_point()
 
-3. 인터랙티브 그래프 만들기
+2. 기본 산점도 → 인터랙티브 변환
+p <- ggplot(data = mpg, aes(x = displ, y = hwy, col = drv)) +
+  geom_point()
+
+ggplotly(p)  # 인터랙티브 변환
+
+#HTML로 저장
+메뉴바의 Export → Save as Web Page... 클릭
+.html로 저장하면 웹 브라우저에서 공유 및 조작 가능
+
+3. 인터랙티브 막대 그래프
+p <- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
+  geom_bar(position = "dodge")
+
 ggplotly(p)
 
-4. HTML로 저장하기
-[Export -> Save as Web Page...]를 클릭하면 인터랙티브 그래프를 HTML 포맷으로 저장할 수 있다
-일반인들도 그래프를 볼 수가 있다
 
-5. 인터랙티브 막대 그래프 만들기
-p <- ggplot(data=diamonds, aes(x=cut, fill=clarity)) + geom_bar(position = "dodge")
-ggplotly(p)
-
-[dygraphs 패키지로 인터랙티브 시계열 그래프 만들기]
-1. dygraphs 패키지를 설치하고 로드하기
+[dygraphs 패키지를 활용한 인터랙티브 시계열 그래프]
+1. 패키지 설치 및 불러오기
 install.packages("dygraphs")
 library(dygraphs)
 
-2. economics 데이터 불러오기
+2. 시계열 데이터 준비
 economics <- ggplot2::economics
-head(economics)
-
-3. xts()로 데이터를 시간 속성을 지니는 xts 데이터 타입으로 만들기
 library(xts)
-eco <- xts(economics$unemploy, order.by = economics$date)
-head(eco)
+eco <- xts(economics$unemploy, order.by = economics$date)  # xts 타입으로 변환
 
-4. 인터랙티브 시계열 그래프 만들기
-dygraph(eco) #그래프 생성
-*마우스 드래그하면 특정 기간만 확대할 수 있고, 더블클릭하면 다시 원래대로 되돌아간다
+3. 기본 시계열 그래프
+dygraph(eco)  # 드래그로 확대, 더블클릭으로 원상 복귀
 
-5. dyRangeSelector()을 추가해 그래프 아래 날짜 범위 선택 기능을 추가하기
+4. 날짜 범위 선택 기능 추가
 dygraph(eco) %>% dyRangeSelector()
 
-6. 여러 값 표현하기
-eco_a <- xts(economics$psavert, order.by = economics$date) #저축률
-eco_b <- xts(economics$unemploy/1000, order.by = economics$date) #실업자 수
 
-7. 두 데이터 결합
-eco2 <- cbind(eco_a, eco_b)                 #데이터 결합
-colnames(eco2) <- c("psavert", "unemploy")  #변수명 바꾸기
-haed(eco2)
+[여러 변수 시각화]
+데이터 준비
+eco_a <- xts(economics$psavert, order.by = economics$date)         # 저축률
+eco_b <- xts(economics$unemploy / 1000, order.by = economics$date) # 실업자 수 (단위 조정)
 
-8. 그래프 만들기
+eco2 <- cbind(eco_a, eco_b)
+colnames(eco2) <- c("psavert", "unemploy")
+
+복합 시계열 그래프
 dygraph(eco2) %>% dyRangeSelector()
