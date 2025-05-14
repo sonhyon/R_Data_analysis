@@ -1,44 +1,55 @@
-[compact 자동차와 suv 자동차의 도시 연비 t검정]
-mpg <- as.data.frame(ggplot2::mpg)
+[두 집단의 평균 비교 (T-검정)]
+#compact 자동차 vs suv 자동차의 도시 연비 비교
+library(ggplot2)
 library(dplyr)
+
+mpg <- as.data.frame(ggplot2::mpg)
+
 mpg_diff <- mpg %>%
   select(class, cty) %>%
   filter(class %in% c("compact", "suv"))
-head(mpg_diff)
-table(mpg_diff$class)
 
-t.test(data = mpg_diff, cty ~ class, var.equal = T) #var.equal=T는 등분산 가정
+table(mpg_diff$class)  # 각 그룹별 관측치 수
 
-[일반 휘발유와 고급 휘발유의 도시 연비 t검정]
+t.test(data = mpg_diff, cty ~ class, var.equal = TRUE)  # 독립표본 t-검정 (등분산 가정)
+
+#일반 휘발유 vs 고급 휘발유의 도시 연비 비교
 mpg_diff2 <- mpg %>%
-  select(fl, sty) %>%
-  filter(fl %in% c("r", "p")) #r:regular, p:premium
+  select(fl, cty) %>%
+  filter(fl %in% c("r", "p"))  # r: regular, p: premium
+
 table(mpg_diff2$fl)
 
-t.test(data = mpg_diff2, cty ~ fl, var.equal = T)
+t.test(data = mpg_diff2, cty ~ fl, var.equal = TRUE)  # 독립표본 t-검정
 
 
-[실업자 수와 개인 소비 지출의 상관관계]
+[상관관계 분석]
+#실업자 수와 개인 소비 지출 간의 상관관계
 economics <- as.data.frame(ggplot2::economics)
+
 cor.test(economics$unemploy, economics$pce)
 
-[상관행렬 히트맵 만들기]
-head(mtcars)
-car_cor <- cor(mtcars) #상관행렬 생성
-round(car_cor, 2) #소수점 셋째 자리에서 반올림해 출력
 
+[상관행렬 히트맵 시각화]
+#자동차 데이터 상관관계 분석 (mtcars)
+head(mtcars)
+car_cor <- cor(mtcars)      # 상관행렬 생성
+round(car_cor, 2)           # 소수점 둘째자리까지 반올림 출력
+
+#corrplot 패키지로 히트맵 그리기
 install.packages("corrplot")
 library(corrplot)
-corrplot(car_cor) #히트맵 만들기
-corrplot(car_cor, method = "number") #상관계수 히트맵 만들기
+corrplot(car_cor) # 기본 히트맵
+corrplot(car_cor, method = "number") # 상관계수 숫자로 표시
 
-col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFFF", "#77AADD", "#4477AA")) #색상 코드 목록
+#색상 커스터마이징 및 시각적 개선
+col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
 corrplot(car_cor,
-        method = "color",
-        col = col(200),
-        type = "lower",          #왼쪽 아래 행렬만 표시
-        order = "hclust",
-        addCoef.col = "black",
-        tl.col = "black",
-        tl.srt = 45,
-        diag = F)
+         method = "color",       # 색상으로 표현
+         col = col(200),         # 색상 수
+         type = "lower",         # 하삼각행렬만 표시
+         order = "hclust",       # 군집화 순서대로 정렬
+         addCoef.col = "black",  # 상관계수 표시
+         tl.col = "black",       # 변수명 색상
+         tl.srt = 45,            # 변수명 회전 각도
+         diag = FALSE)           # 대각선 제거
