@@ -5,6 +5,7 @@ df <- data.frame(
   Gender = c("Male", "Female", "Male", "Female", "Female"),
   Score = c(88, NA, 76, 95, 85)
 )
+df
 
 #1. 결측치(Missing Values) 처리
 
