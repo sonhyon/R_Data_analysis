@@ -54,6 +54,7 @@ ggplot(sex_income, aes(x = sex, y = mean_income)) +
   geom_col()
 
 
+────────────────────────────────────────────────────────────────────────────────────
 7. 나이 변수 생성 및 전처리
 welfare$birth <- ifelse(welfare$birth == 9999, NA, welfare$birth)
 welfare$age <- 2015 - welfare$birth + 1
@@ -71,6 +72,7 @@ ggplot(age_income, aes(x = age, y = mean_income)) +
   geom_line()
 
 
+────────────────────────────────────────────────────────────────────────────────────
 9. 연령대 파생 변수 생성 및 분석
 welfare <- welfare %>%
   mutate(ageg = ifelse(age < 30, "young",
@@ -82,7 +84,7 @@ ageg_income <- welfare %>%
   group_by(ageg) %>%
   summarise(mean_income = mean(income))
 
-ggplot(ageg_income, aes(x = ageg, y = mean_income)) + 
+ggplot(ageg_income, aes(x = ageg, y = mean_income)) +         
   geom_col() +
   scale_x_discrete(limits = c("young", "middle", "old"))
 
@@ -93,11 +95,12 @@ sex_income <- welfare %>%
   group_by(ageg, sex) %>%
   summarise(mean_income = mean(income))
 
-ggplot(sex_income, aes(x = ageg, y = mean_income, fill = sex)) +
+ggplot(sex_income, aes(x = ageg, y = mean_income, fill = sex)) +          #fill : 도형 내부를 채우는 색상
   geom_col(position = "dodge") +
   scale_x_discrete(limits = c("young", "middle", "old"))
 
 
+────────────────────────────────────────────────────────────────────────────────────
 11. 직업별 월급 차이
 job_income <- welfare %>%
   filter(!is.na(job) & !is.na(income)) %>%
@@ -113,6 +116,7 @@ ggplot(top10, aes(x = reorder(job, mean_income), y = mean_income)) +
   coord_flip()         #x축과 y축을 뒤바꾸는 함수
 
 
+────────────────────────────────────────────────────────────────────────────────────
 12. 성별 직업 빈도
 job_male <- welfare %>%
   filter(!is.na(job) & sex == "male") %>%
@@ -126,6 +130,7 @@ ggplot(job_male, aes(x = reorder(job, n), y = n)) +
   coord_flip()
 
 
+────────────────────────────────────────────────────────────────────────────────────
 13. 종교 유무에 따른 이혼율
 religion_marriage <- welfare %>%
   filter(!is.na(group_marriage)) %>%
@@ -137,6 +142,7 @@ ggplot(religion_marriage, aes(x = ageg, y = pct, fill = religion)) +
   geom_col(position = "dodge")
 
 
+────────────────────────────────────────────────────────────────────────────────────
 14. 지역별 연령대 비율 시각화
 # 정렬 순서 지정
 list_order_old <- region_ageg %>%
