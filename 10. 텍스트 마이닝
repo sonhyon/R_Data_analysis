@@ -1,19 +1,20 @@
-[KoNLP 패키지 설치 및 준비]
+[KoNLP 패키지 설치 및 준비] : KoNLP는 Java 기반의 형태소 분석기를 사용하므로 **Java Development Kit (JDK)**가 필요합니다
 1. 자바 및 rJava 설치
-install.packages("multilinguer")
-library(multilinguer)
+install.packages("multilinguer") #multilinguer 패키지를 이용하면 install_jdk() 함수로 자동 설치가 가능합니다.
+library(multilinguer) 
 install_jdk()  # Java 설치
 
-2. KoNLP 의존성 패키지 설치
+2. KoNLP 의존성 패키지 설치 : KoNLP가 정상적으로 작동하기 위해 필요한 필수 패키지들을 한 번에 설치합니다.
 install.packages(c("stringr", "hash", "tau", "Sejong", "RSQLite", "devtools"), type="binary")
 
 3. KoNLP 설치 및 불러오기
 install.packages("remotes")
-remotes::install_github("haven-jeon/KoNLP", upgrade = "never", INSTALL_opts = c("--no-multiarch"))
+remotes::install_github("haven-jeon/KoNLP", upgrade = "never", INSTALL_opts = c("--no-multiarch")) #GitHub에서 최신 KoNLP 패키지를 설치합니다.
+
 library(KoNLP)
 
 4. 형태소 사전 설정
-useNIADic()  # NIA 사전 사용 설정
+useNIADic()  # NIA 사전을 KoNLP에 등록합니다. 이는 정확한 명사 추출을 위해 필수입니다.
 
 
 [텍스트 마이닝 실습 - 힙합 가사 예제]
@@ -22,35 +23,36 @@ txt <- readLines("C:/Users/sonhy/OneDrive/바탕 화면/코딩/R/데이터 분�
 
 2. 특수문자 제거
 library(stringr)
-txt <- str_replace_all(txt, "[^가-힣\\s]", "")
+txt <- str_replace_all(txt, "[^가-힣\\s]", "") # 한글과 공백을 제외한 모든 문자 제거 (숫자, 특수기호, 영어 등 삭제)
 
 3. 명사 추출 및 단어 빈도 분석
-nouns <- extractNoun(txt)
-wordcount <- table(unlist(nouns))
+nouns <- extractNoun(txt)                                                  # 줄마다 명사만 추출합니다 (리스트 형식 반환).
+wordcount <- table(unlist(nouns))                                          # 리스트를 벡터로 변환해 단어 단위로 처리할 수 있도록 합니다
 df_word <- as.data.frame(wordcount, stringsAsFactors = FALSE)
 df_word <- rename(df_word, word = Var1, freq = Freq)
-df_word <- filter(df_word, nchar(word) >= 2)  # 2글자 이상 필터링
+df_word <- filter(df_word, nchar(word) >= 2)  # 2글자 이상 필터링           # 1글자 명사는 제거하고 2글자 이상 단어만 남깁니다
 
 4. 상위 단어 추출
 top_20 <- df_word %>% arrange(desc(freq)) %>% head(20)
 
 
 [워드 클라우드 시각화]
-install.packages("wordcloud")
+install.packages("wordcloud") # 단어 빈도에 따라 글자 크기/위치가 달라지는 워드 클라우드 시각화 패키지
 library(wordcloud)
-library(RColorBrewer)
+library(RColorBrewer)         # 시각화를 위한 색상 팔레트 제공
 
-pal <- brewer.pal(8, "Dark2")
-set.seed(1234)
+pal <- brewer.pal(8, "Dark2")   # 색상 팔레트 설정
+set.seed(1234)                  # 무작위 배치 고정 (재현성 확보)
 
 wordcloud(words = df_word$word,
           freq = df_word$freq,
-          min.freq = 2,
-          max.words = 200,
-          random.order = FALSE,
-          rot.per = 0.1,
-          scale = c(4, 0.3),
-          colors = pal)
+          min.freq = 2,         # 최소 등장 횟수 2회 이상만 시각화
+          max.words = 200,      # 최대 200개 단어까지 표시
+          random.order = FALSE, # 자주 나온 단어를 중앙에 배치
+          rot.per = 0.1,        # 회전 비율 10%
+          scale = c(4, 0.3),    # 글자 크기 범위 설정
+          colors = pal)         # 색상 설정
+
 
 
 [국정원 트윗 텍스트 마이닝]
