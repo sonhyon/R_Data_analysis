@@ -18,11 +18,11 @@ useNIADic()  # NIA 사전 사용 설정
 
 [텍스트 마이닝 실습 - 힙합 가사 예제]
 1. 데이터 불러오기
-txt <- readLines("hiphop.txt")
+txt <- readLines("C:/Users/sonhy/OneDrive/바탕 화면/코딩/R/데이터 분석/hiphop.txt")
 
 2. 특수문자 제거
 library(stringr)
-txt <- str_replace_all(txt, "\\w", " ")  # 특수문자 제거
+txt <- str_replace_all(txt, "[^가-힣\\s]", "")
 
 3. 명사 추출 및 단어 빈도 분석
 nouns <- extractNoun(txt)
