@@ -15,7 +15,7 @@ crime$state <- tolower(crime$state)  # 소문자로 통일
 4. 미국 주 지도 데이터 준비
 install.packages("maps")
 library(ggplot2)
-states_map <- map_data("state")
+states_map <- map_data("state") #지구 시각화를 할 때 사용
 str(states_map)
 
 5. 단계 구분도 시각화
