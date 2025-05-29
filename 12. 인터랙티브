@@ -4,7 +4,7 @@
 
 [plotly 패키지를 활용한 인터랙티브 그래프]
 1. 패키지 설치 및 불러오기
-install.packages("plotly")
+install.packages("plotly") # ggplot2 그래프를 인터랙티브하게 변환
 library(plotly)
 library(ggplot2)
 
@@ -27,12 +27,12 @@ ggplotly(p)
 
 [dygraphs 패키지를 활용한 인터랙티브 시계열 그래프]
 1. 패키지 설치 및 불러오기
-install.packages("dygraphs")
+install.packages("dygraphs") # 시계열 데이터를 위한 인터랙티브 차트
 library(dygraphs)
 
 2. 시계열 데이터 준비
 economics <- ggplot2::economics
-library(xts)
+library(xts)  # xts는 시계열 데이터를 다루기 위한 패키지
 eco <- xts(economics$unemploy, order.by = economics$date)  # xts 타입으로 변환
 
 3. 기본 시계열 그래프
