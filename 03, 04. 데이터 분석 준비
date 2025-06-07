@@ -60,10 +60,13 @@ read_excel("파일경로/파일명.xlsx")             # 다른 경로
 read_excel("파일명.xlsx", col_names = FALSE)  # 첫 줄이 변수명이 아닐 때
 read_excel("파일명.xlsx", sheet = 3)           # 시트 지정
 
-#CSV 파일
+# CSV 파일
 read.csv("파일명.csv")                        #불러오기
 write.csv(데이터프레임명, file = "파일명.csv") #저장하기
 
+*
+Excel : 표, 수식, 서식, 차트, 매크로 등 푸부한 기능
+CSV : 쉼표로 구분된 순수 텍스트, 서식이나 차트는 저장되지 않고, 오직 데이터만 저장됨
 
 #7. RDS 파일 저장 및 불러오기
 saveRDS(데이터프레임명, file = "파일명.rds")    #저장
