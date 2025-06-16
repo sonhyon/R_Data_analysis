@@ -1,65 +1,67 @@
-[미국 주별 강력 범죄율 단계 구분도 만들기]
+🗺️ 미국 주별 강력 범죄율 단계 구분도
 1. 패키지 설치 및 불러오기
 install.packages("mapproj")
 install.packages("ggiraphExtra")
 library(ggiraphExtra)
 
-2. 데이터 준비
-str(USArrests)  # 내장 데이터 확인
-
-3. 데이터 가공
+2. 데이터 확인 및 전처리
+str(USArrests)  # 미국 50개 주의 범죄 통계 데이터
 library(tibble)
-crime <- rownames_to_column(USArrests, var = "state")
-crime$state <- tolower(crime$state)  # 소문자로 통일
+crime <- rownames_to_column(USArrests, var = "state")  # 주 이름을 컬럼으로
+crime$state <- tolower(crime$state)                    # 소문자로 변환
 
-4. 미국 주 지도 데이터 준비
+3. 미국 지도 데이터 준비
 install.packages("maps")
 library(ggplot2)
-states_map <- map_data("state") #지구 시각화를 할 때 사용
+states_map <- map_data("state")  # 주 지도 데이터
 str(states_map)
 
-5. 단계 구분도 시각화
+4. 단계 구분도 시각화
 ggChoropleth(data = crime,
              aes(fill = Murder, map_id = state),
              map = states_map)
 
-6. 인터랙티브 단계 구분도
+5. 인터랙티브 단계 구분도
 ggChoropleth(data = crime,
              aes(fill = Murder, map_id = state),
              map = states_map,
              interactive = TRUE)
 
-
-[대한민국 시도별 인구 단계 구분도 만들기]
+🇰🇷 대한민국 시도별 인구 단계 구분도
 1. 패키지 설치 및 불러오기
 install.packages("stringi")
 install.packages("devtools")
 devtools::install_github("cardiomoon/kormaps2014")
 library(kormaps2014)
 
-2. 인구 데이터 확인
+2. 시도별 인구 데이터 확인 및 가공
 str(korpop1)  # 시도별 인구 데이터
 
-3. 변수명 영문으로 변경
 library(dplyr)
 korpop1 <- rename(korpop1,
                   pop = 총인구_명,
                   name = 행정구역별_읍면동)
 
-4. 지도 데이터 확인
-str(kormap1)  # 시도 지도 정보
+3. 지도 데이터 확인
+str(kormap1)  # 시도 지도 데이터
 
-5. 인터랙티브 단계 구분도
+4. 인터랙티브 인구 단계 구분도
 ggChoropleth(data = korpop1,
              aes(fill = pop, map_id = code, tooltip = name),
              map = kormap1,
              interactive = TRUE)
 
+🧫 대한민국 시도별 결핵 환자 수 단계 구분도
+1. 결핵 데이터 확인 및 시각화
+str(tbc)  # NewPts: 결핵 신규 환자 수
 
-[대한민국 시도별 결핵 환자 수 단계 구분도]
-1. 결핵 데이터 확인
-str(tbc)  # NewPts: 결핵 환자 수
 ggChoropleth(data = tbc,
              aes(fill = NewPts, map_id = code, tooltip = name),
              map = kormap1,
              interactive = TRUE)
+
+📌 참고 사항 요약
+ggChoropleth() 함수는 ggiraphExtra 패키지에서 제공되며, map_id로 지리 정보를 매칭합니다.
+미국 데이터는 state 이름을, 한국 데이터는 code 값을 기준으로 매칭합니다.
+interactive = TRUE 옵션을 통해 툴팁 기능과 마우스 반응형 지도가 생성됩니다.
+한국 지도는 kormaps2014 패키지를 통해 쉽게 불러올 수 있으며, 한글 깨짐 방지를 위해 UTF-8 인코딩 주의가 필요할 수 있습니다.
