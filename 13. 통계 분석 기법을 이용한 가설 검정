@@ -1,5 +1,5 @@
-[두 집단의 평균 비교 (T-검정)]
-#compact 자동차 vs suv 자동차의 도시 연비 비교
+📌 두 집단의 평균 비교: T-검정 (t-test)
+1. compact 자동차 vs SUV의 도시 연비 비교
 library(ggplot2)
 library(dplyr)
 
@@ -9,47 +9,70 @@ mpg_diff <- mpg %>%
   select(class, cty) %>%
   filter(class %in% c("compact", "suv"))
 
-table(mpg_diff$class)  # 각 그룹별 관측치 수
+table(mpg_diff$class)  # 각 그룹 관측치 확인
 
-t.test(data = mpg_diff, cty ~ class, var.equal = TRUE)  # 독립표본 t-검정 (등분산 가정)
+# 독립표본 t-검정 (등분산 가정)
+t.test(data = mpg_diff, cty ~ class, var.equal = TRUE)
 
-#일반 휘발유 vs 고급 휘발유의 도시 연비 비교
+▶ cty ~ class: 도시 연비(cty)가 자동차 종류(class)에 따라 차이가 있는지 검정
+▶ var.equal = TRUE: 두 집단의 분산이 같다고 가정 (등분산 가정)
+
+
+2. 일반 휘발유 vs 고급 휘발유의 도시 연비 비교
 mpg_diff2 <- mpg %>%
   select(fl, cty) %>%
   filter(fl %in% c("r", "p"))  # r: regular, p: premium
 
 table(mpg_diff2$fl)
 
-t.test(data = mpg_diff2, cty ~ fl, var.equal = TRUE)  # 독립표본 t-검정
+t.test(data = mpg_diff2, cty ~ fl, var.equal = TRUE)
 
+▶ 연료 종류(fl)에 따라 도시 연비(cty)가 다른지 검정
 
-[상관관계 분석]
-#실업자 수와 개인 소비 지출 간의 상관관계
+📈 상관관계 분석 (correlation)
+실업자 수 vs 개인 소비 지출
 economics <- as.data.frame(ggplot2::economics)
-
 cor.test(economics$unemploy, economics$pce)
 
+▶ cor.test()는 **상관계수 + 유의성 검정(p-value)**까지 제공
+상관계수(cor)는 -1 ~ +1 사이
+p-value가 0.05 미만이면 유의미한 상관관계로 해석
 
-[상관행렬 히트맵 시각화]
-#자동차 데이터 상관관계 분석 (mtcars)
+
+🔥 상관행렬 히트맵 (Heatmap of Correlation Matrix)
+1. 상관행렬 만들기 (mtcars 데이터 활용)
 head(mtcars)
-car_cor <- cor(mtcars)      # 상관행렬 생성
-round(car_cor, 2)           # 소수점 둘째자리까지 반올림 출력
+car_cor <- cor(mtcars)     # 상관행렬 계산
+round(car_cor, 2)          # 소수점 둘째 자리로 반올림
 
-#corrplot 패키지로 히트맵 그리기
+2. corrplot 패키지를 활용한 히트맵
 install.packages("corrplot")
 library(corrplot)
-corrplot(car_cor) # 기본 히트맵
-corrplot(car_cor, method = "number") # 상관계수 숫자로 표시
 
-#색상 커스터마이징 및 시각적 개선
+corrplot(car_cor)                      # 기본 히트맵
+corrplot(car_cor, method = "number")  # 상관계수 숫자로 표시
+
+3. 색상 커스터마이징 & 시각적 개선
 col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
+
 corrplot(car_cor,
-         method = "color",       # 색상으로 표현
-         col = col(200),         # 색상 수
+         method = "color",       # 색상 표현
+         col = col(200),         # 색상 단계 수
          type = "lower",         # 하삼각행렬만 표시
          order = "hclust",       # 군집화 순서대로 정렬
-         addCoef.col = "black",  # 상관계수 표시
+         addCoef.col = "black",  # 상관계수 숫자 표시
          tl.col = "black",       # 변수명 색상
          tl.srt = 45,            # 변수명 회전 각도
          diag = FALSE)           # 대각선 제거
+
+▶ 색이 진할수록 상관성이 높고, 음수-양수 방향성도 직관적으로 표현
+▶ 변수 간 관계를 빠르게 파악하는 데 유용
+
+
+✅ 정리 요약
+| 분석 방법    | 사용 함수                 | 특징 및 목적                             |
+| -------- | --------------------- | ----------------------------------- |
+| 평균 차이 분석 | `t.test()`            | 두 집단 간 평균 차이 검정 (예: compact vs suv) |
+| 상관관계 분석  | `cor()`, `cor.test()` | 변수 간 선형 관계 분석 및 유의성 검정              |
+| 상관 히트맵   | `corrplot()`          | 여러 변수의 상관관계 시각화, 군집 정렬 가능           |
+
