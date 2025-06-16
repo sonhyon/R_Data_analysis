@@ -1,107 +1,99 @@
-1. 패키지 설치 및 데이터 불러오기
+📊 국민복지패널 데이터 분석 요약 정리
+📦 1. 패키지 설치 및 데이터 불러오기
 install.packages("foreign")
-library(foreign)
-library(dplyr)
-library(ggplot2)
-library(readxl)
+library(foreign); library(dplyr); library(ggplot2); library(readxl)
 
-# SPSS 파일 불러오기
-raw_welfare <- read.spss(file = "koweps_hpc10_2015_beta1.sav", to.data.frame = T)
+raw_welfare <- read.spss("koweps_hpc10_2015_beta1.sav", to.data.frame = T)
 welfare <- raw_welfare
 
+.sav(SPSS) 파일을 R에서 불러옴
 
-2. 데이터 구조 파악
-head(welfare)
-tail(welfare)
-View(welfare)
-dim(welfare)
-str(welfare)
-summary(welfare)
+🧾 2. 데이터 구조 파악
+head(welfare); tail(welfare); View(welfare)
+dim(welfare); str(welfare); summary(welfare)
 
+데이터의 크기, 변수 구조, 요약통계 확인
 
-3. 변수명 변경 (원시 코드 → 의미 있는 변수명)
+🏷️ 3. 변수명 변경
 welfare <- rename(welfare,
-  sex = h10_g3,
-  birth = h10_g4,
-  marriage = h10_g10,
-  religion = h10_g11,
-  income = p1002_8aq1,
-  code_job = h10_eco9,
-  code_region = h10_reg7)
+  sex = h10_g3, birth = h10_g4, marriage = h10_g10,
+  religion = h10_g11, income = p1002_8aq1,
+  code_job = h10_eco9, code_region = h10_reg7)
 
+코드로 되어 있는 변수명을 의미 있는 이름으로 바꿈
 
-4. 성별 변수 전처리
-table(welfare$sex)
-welfare$sex <- ifelse(welfare$sex == 9, NA, welfare$sex) # 이상치 제거
-welfare$sex <- ifelse(welfare$sex == 1, "male", "female") # 값 치환
-table(welfare$sex)
+👨‍👩‍👧‍👦 4. 성별 변수 전처리
+welfare$sex <- ifelse(welfare$sex == 9, NA, welfare$sex)
+welfare$sex <- ifelse(welfare$sex == 1, "male", "female")
 
+이상치 9 → NA
+1: 남성, 2: 여성 → 문자형으로 변환
 
-5. 월급(income) 변수 전처리
+💰 5. 월급 변수 전처리
 summary(welfare$income)
 qplot(welfare$income) + xlim(0, 1000)
+
 welfare$income <- ifelse(welfare$income %in% c(0, 9999), NA, welfare$income)
-table(is.na(welfare$income))
 
+0, 9999는 월급 없음 혹은 이상값 → NA 처리
+월급 분포 시각화
 
-6. 성별에 따른 월급 차이
+📈 6. 성별에 따른 월급 차이
 sex_income <- welfare %>%
   filter(!is.na(income)) %>%
   group_by(sex) %>%
   summarise(mean_income = mean(income))
 
-ggplot(sex_income, aes(x = sex, y = mean_income)) + 
+ggplot(sex_income, aes(x = sex, y = mean_income)) +
   geom_col()
 
-
-────────────────────────────────────────────────────────────────────────────────────
-7. 나이 변수 생성 및 전처리
+🎂 7. 나이 변수 생성 및 전처리
 welfare$birth <- ifelse(welfare$birth == 9999, NA, welfare$birth)
 welfare$age <- 2015 - welfare$birth + 1
-summary(welfare$age)
 qplot(welfare$age)
 
+출생연도 → 나이 계산
+9999는 결측 → NA 처리
 
-8. 나이와 월급 관계
+📉 8. 나이와 월급 관계
 age_income <- welfare %>%
   filter(!is.na(income)) %>%
   group_by(age) %>%
   summarise(mean_income = mean(income))
 
-ggplot(age_income, aes(x = age, y = mean_income)) + 
+ggplot(age_income, aes(x = age, y = mean_income)) +
   geom_line()
 
+나이별 월급 평균 추세 (곡선 형태로 변화)
 
-────────────────────────────────────────────────────────────────────────────────────
-9. 연령대 파생 변수 생성 및 분석
+👥 9. 연령대 파생 변수 생성 및 분석
 welfare <- welfare %>%
   mutate(ageg = ifelse(age < 30, "young",
                        ifelse(age <= 59, "middle", "old")))
-table(welfare$ageg)
 
 ageg_income <- welfare %>%
   filter(!is.na(income)) %>%
   group_by(ageg) %>%
   summarise(mean_income = mean(income))
 
-ggplot(ageg_income, aes(x = ageg, y = mean_income)) +         
+ggplot(ageg_income, aes(x = ageg, y = mean_income)) +
   geom_col() +
   scale_x_discrete(limits = c("young", "middle", "old"))
 
+young/middle/old 세 연령대 구분
+연령대별 월급 비교
 
-10. 연령대 및 성별 월급 차이
+📊 10. 연령대 및 성별 월급 차이
 sex_income <- welfare %>%
   filter(!is.na(income)) %>%
   group_by(ageg, sex) %>%
   summarise(mean_income = mean(income))
 
-ggplot(sex_income, aes(x = ageg, y = mean_income, fill = sex)) +          #fill : 도형 내부를 채우는 색상
+ggplot(sex_income, aes(x = ageg, y = mean_income, fill = sex)) +
   geom_col(position = "dodge") +
   scale_x_discrete(limits = c("young", "middle", "old"))
 
-
-────────────────────────────────────────────────────────────────────────────────────
-11. 직업별 월급 차이
+👔 11. 직업별 월급 차이
 job_income <- welfare %>%
   filter(!is.na(job) & !is.na(income)) %>%
   group_by(job) %>%
@@ -113,11 +105,11 @@ top10 <- job_income %>%
 
 ggplot(top10, aes(x = reorder(job, mean_income), y = mean_income)) +
   geom_col() +
-  coord_flip()         #x축과 y축을 뒤바꾸는 함수
+  coord_flip()
 
+직업별 월급 평균 상위 10개 직업 시각화 (막대 + 회전)
 
-────────────────────────────────────────────────────────────────────────────────────
-12. 성별 직업 빈도
+🧑‍🔧 12. 성별 직업 빈도
 job_male <- welfare %>%
   filter(!is.na(job) & sex == "male") %>%
   group_by(job) %>%
@@ -129,9 +121,9 @@ ggplot(job_male, aes(x = reorder(job, n), y = n)) +
   geom_col() +
   coord_flip()
 
+남성 기준 빈도수 높은 직업 Top 10
 
-────────────────────────────────────────────────────────────────────────────────────
-13. 종교 유무에 따른 이혼율
+⛪ 13. 종교 유무에 따른 이혼율
 religion_marriage <- welfare %>%
   filter(!is.na(group_marriage)) %>%
   count(religion, group_marriage) %>%
@@ -141,9 +133,10 @@ religion_marriage <- welfare %>%
 ggplot(religion_marriage, aes(x = ageg, y = pct, fill = religion)) +
   geom_col(position = "dodge")
 
+종교 유무에 따른 이혼 비율 시각화
+※ group_marriage는 미리 생성되어 있어야 함
 
-────────────────────────────────────────────────────────────────────────────────────
-14. 지역별 연령대 비율 시각화
+🏘️ 14. 지역별 연령대 비율
 # 정렬 순서 지정
 list_order_old <- region_ageg %>%
   filter(ageg == "old") %>%
@@ -151,7 +144,7 @@ list_order_old <- region_ageg %>%
 order <- list_order_old$region
 
 # ageg 순서 지정
-region_ageg$ageg <- factor(region_ageg$ageg, 
+region_ageg$ageg <- factor(region_ageg$ageg,
                            level = c("old", "middle", "young"))
 
 # 시각화
@@ -159,3 +152,6 @@ ggplot(region_ageg, aes(x = region, y = pct, fill = ageg)) +
   geom_col() +
   coord_flip() +
   scale_x_discrete(limits = order)
+
+지역별 고령자 비율 순으로 정렬
+각 지역에서 연령대 비율 비교 가능
