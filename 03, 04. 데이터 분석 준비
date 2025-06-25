@@ -1,34 +1,33 @@
-✅ 1. 변수 생성
+1. 변수 생성
 var1 <- c(1, 2, 5, 7, 8)         # 벡터 생성
 var2 <- c(1:5)                   # 1부터 5까지 연속된 수
 var3 <- seq(1, 5)                # seq(): 1부터 5까지 1씩 증가
 var4 <- seq(1, 10, by = 2)       # 1부터 10까지 2씩 증가
 
-✅ 2. 기본 함수 사용
+2. 기본 함수 사용
 x <- c(1, 2, 3)
 mean(x)    # 평균값
 max(x)     # 최댓값
 min(x)     # 최솟값
 
-✅ 3. 문자열 처리
+3. 문자열 처리
 str5 <- c("Hello", "World", "is", "good!")
 
 paste(str5, collapse = ",")  # "Hello,World,is,good!"
 paste(str5, collapse = " ")  # "Hello World is good!"
 
-✅ 4. 패키지 사용법
-📦 패키지 설치 및 로드
+4. 패키지 사용법
 install.packages("ggplot2")  # 설치
 library(ggplot2)             # 로드
 
-📊 함수 사용 예시
+- 함수 사용 예시
 x <- c("a", "a", "b", "c")
 qplot(x)   # 빈도 막대그래프
 
 qplot(data = mpg, x = drv, y = hwy,
       geom = "boxplot", colour = drv)  # 상자그림
 
-✅ 5. 데이터 프레임 만들기
+5. 데이터 프레임 만들기
 english <- c(90, 80, 60, 70)
 math <- c(50, 60, 100, 20)
 
@@ -42,7 +41,7 @@ df_midterm <- data.frame(
   class = c(1, 1, 2, 2)
 )
 
-✅ 6. 외부 데이터 불러오기
+6. 외부 데이터 불러오기
 📥 엑셀 파일 불러오기
 install.packages("readxl")
 library(readxl)
@@ -56,16 +55,16 @@ read_excel("파일명.xlsx", sheet = 3)            # 3번째 시트 불러오기
 read.csv("파일명.csv")                         # CSV 불러오기
 write.csv(데이터프레임명, file = "파일명.csv")  # CSV 저장하기
 
-| 항목  | 엑셀 (Excel)              | CSV                 |
-| --- | ----------------------- | ------------------- |
+| 항목  | 엑셀 (Excel)                       | CSV                 |
+| --- | -----------------------             | ------------------- |
 | 기능  | 표, 수식, 서식, 차트, 매크로 등 지원 | 텍스트 데이터만 저장 (쉼표 구분) |
-| 확장자 | `.xlsx`, `.xls`         | `.csv`              |
-| 호환성 | 프로그램 필요 (엑셀)            | 대부분 프로그램에서 읽힘       |
+| 확장자 | `.xlsx`, `.xls`                   | `.csv`              |
+| 호환성 | 프로그램 필요 (엑셀)               | 대부분 프로그램에서 읽힘       |
 
-✅ 7. RDS 파일 저장 및 불러오기
+📥 RDS 파일 저장 및 불러오기
 saveRDS(데이터프레임명, file = "파일명.rds")  # 저장
 readRDS("파일명.rds")                        # 불러오기
-rm(데이터명)                                # 메모리에서 삭제
+rm(데이터명)                                 # 메모리에서 삭제
 
 
 
