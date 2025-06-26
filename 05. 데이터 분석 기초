@@ -1,4 +1,4 @@
-✅ 1. 데이터 구조 파악 함수
+1. 데이터 구조 파악 함수
 head(데이터)       # 데이터 앞부분 확인 (기본 6행)
 tail(데이터)       # 데이터 뒷부분 확인
 View(데이터)       # RStudio에서 데이터프레임을 표 형식으로 확인
@@ -6,35 +6,35 @@ dim(데이터)        # 행, 열 개수 출력 (예: 234 x 11)
 str(데이터)        # 구조 확인 (변수명, 자료형 등)
 summary(데이터)    # 각 변수 요약 통계량 (최솟값, 중앙값, 평균, 최댓값 등)
 
-📌 예시: ggplot2의 내장 데이터
+예시: ggplot2의 내장 데이터
 mpg <- as.data.frame(ggplot2::mpg)  # 데이터프레임으로 변환
 
-✅ 2. 변수명 바꾸기 (dplyr 패키지)
+2. 변수명 바꾸기 (dplyr 패키지)
 install.packages("dplyr")  # 설치 (최초 1회)
 library(dplyr)             # 패키지 불러오기
 
 rename(df_new, v2 = var2)  # var2 → v2로 변수명 변경
 
-✅ 3. 파생변수 만들기
-👉 ifelse()를 이용한 조건 분기
+3. 파생변수 만들기
+- ifelse()를 이용한 조건 분기
 mpg$total <- (mpg$cty + mpg$hwy) / 2  # 연비 평균 변수 생성
 
 mpg$test <- ifelse(mpg$total >= 20, "pass", "fail")  # 조건: 연비 20 이상이면 "pass"
 
-👉 다중 조건 분기 (중첩 ifelse)
+- 다중 조건 분기 (중첩 ifelse)
 mpg$grade <- ifelse(mpg$total >= 30, "A",      # 연비 30 이상 → A
               ifelse(mpg$total >= 20, "B",     # 연비 20 이상 → B
                      "C"))                     # 그 외 → C
 
-✅ 4. 분포 및 빈도 확인
+4. 분포 및 빈도 확인
 summary(mpg$total)    # total(연비 평균) 변수 요약 통계량
 hist(mpg$total)       # 연비 분포 히스토그램
 
-👉 범주형 변수 빈도 확인
+- 범주형 변수 빈도 확인
 table(mpg$test)       # "pass"/"fail" 빈도 확인
 qplot(mpg$test)       # 빈도 막대그래프 시각화
 
-📝 전체 분석 흐름 예시
+- 전체 분석 흐름 예시
 # 1. 데이터 로드
 mpg <- as.data.frame(ggplot2::mpg)
 
