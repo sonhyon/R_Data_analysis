@@ -1,56 +1,56 @@
-✅ 1. 결측치(Missing Values) 처리
-📌 예제 데이터 생성
+1. 결측치(Missing Values) 처리
 df <- data.frame(
   Name = c("John", "Alice", "Bob", "Diana", NA),
   Age = c(25, 30, NA, 22, 27),
   Gender = c("Male", "Female", "Male", "Female", "Female"),
-  Score = c(88, NA, 76, 95, 85)
-)
+  Score = c(88, NA, 76, 95, 85))
 df
 
-🔍 결측치 확인
+- 결측치 확인
 is.na(df)             # 각 원소별 NA 여부 (TRUE/FALSE)
 table(is.na(df))      # 전체 데이터 중 NA와 TRUE의 개수 집계
 
-🔎 특정 변수에 결측치가 있는 행 추출
+- 특정 변수에 결측치가 있는 행 추출
 df %>% filter(is.na(Score))   # Score 변수에 NA가 있는 행
 
-🧹 결측치 제거
+- 결측치 제거
 df %>% filter(!is.na(Score))  # Score에 NA가 없는 행만 추출
 na.omit(df)                   # 모든 변수 기준으로 NA가 하나라도 있으면 제거
 
-🧮 결측치를 제외한 통계 계산
+- 결측치를 제외한 통계 계산
 mean(df$Score, na.rm = TRUE)  # NA 제거 후 평균 계산
 
-✍️ 결측치 직접 생성
+- 결측치 직접 생성
 exam[c(3, 8, 5), "math"] <- NA  # exam 데이터에서 특정 행의 math에 NA 삽입
 
-🔁 결측치 대체 (imputation)
+- 결측치 대체 (imputation)
+mean(exam$math, na.rm=T)
+exam$math <- ifelse(is.na(exam$math( ,55, exam$math) # 평균값으로 결측치 대체하기
 
-✅ 2. 이상치(Outliers) 처리
-📊 범주형 변수의 이상치
+2. 이상치(Outliers) 처리
+- 범주형 변수의 이상치
 table(outlier$sex)    # sex 변수의 값 분포 확인
 outlier$sex <- ifelse(outlier$sex == 3, NA, outlier$sex)  # 성별에서 3은 이상치로 간주해 NA 처리
 
-📈 이상치 제거 후 그룹별 통계
+- 이상치 제거 후 그룹별 통계
 outlier %>%
   filter(!is.na(sex) & !is.na(score)) %>%
   group_by(sex) %>%
   summarise(mean_score = mean(score))
 
-📉 연속형 변수의 이상치 확인 (boxplot)
+- 연속형 변수의 이상치 확인 (boxplot)
 boxplot(mpg$hwy)          # 상자그림으로 분포 확인
 boxplot(mpg$hwy)$stats    # 상자그림의 통계 값 (min, Q1, median, Q3, max)
 
-🧺 이상치 처리 (NA로 대체)
+- 이상치 처리 (NA로 대체)
 mpg$hwy <- ifelse(mpg$hwy < 12 | mpg$hwy > 37, NA, mpg$hwy)  # hwy에서 이상치를 NA로 처리
 
-📊 이상치 처리 후 그룹별 평균
+- 이상치 처리 후 그룹별 평균
 mpg %>%
   group_by(drv) %>%
   summarise(mean_hwy = mean(hwy, na.rm = TRUE))  # 결측치 제외하고 평균 계산
 
-📌 참고 정리
+- 정리
 | 처리 항목         | 방법                              |                      |
 | ------------- | ------------------------------- | -------------------- |
 | 결측치 확인        | `is.na()`, `table(is.na())`     |                      |
