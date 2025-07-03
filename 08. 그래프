@@ -1,18 +1,18 @@
-✅ ggplot2 시각화 기초
-📌 1단계: 배경 설정
+1. ggplot2 시각화 기초
+- 1단계: 배경 설정
 ggplot(data = mpg, aes(x = displ, y = hwy))
 
 data = mpg : 사용할 데이터프레임 지정
 aes(x = displ, y = hwy) : x축과 y축에 사용할 변수 지정
 그래프 요소는 아직 없음 (캔버스만 설정)
 
-📌 2단계: 그래프 추가 - 산점도 (geom_point())
+- 2단계: 그래프 추가 - 산점도 (geom_point())
 ggplot(data = mpg, aes(x = displ, y = hwy)) +
   geom_point()
 
 geom_point() : 산점도 점(point) 추가
 
-📌 3단계: 설정 추가 - 축 범위 조정
+- 3단계: 설정 추가 - 축 범위 조정
 ggplot(data = mpg, aes(x = displ, y = hwy)) +
   geom_point() +
   xlim(3, 6) + 
@@ -21,8 +21,8 @@ ggplot(data = mpg, aes(x = displ, y = hwy)) +
 xlim(), ylim() : x축과 y축의 범위를 제한
 축의 범위를 제한하여 관심 있는 데이터만 표시 가능
 
-✅ 막대 그래프
-📊 1. 평균 막대 그래프 (geom_col())
+2. 막대 그래프
+- 평균 막대 그래프 (geom_col())
 df_mpg <- mpg %>%
   group_by(drv) %>%
   summarise(mean_hwy = mean(hwy))
@@ -33,32 +33,23 @@ ggplot(data = df_mpg, aes(x = drv, y = mean_hwy)) +
 geom_col() : y값(평균 등)을 직접 지정하는 막대 그래프
 사전 집계(summarise()) 필요
 
-📊 2. 빈도 막대 그래프 (geom_bar())
+- 빈도 막대 그래프 (geom_bar())
 ggplot(data = mpg, aes(x = drv)) +
   geom_bar()
 
 geom_bar() : 각 범주별 빈도를 자동 계산해서 막대 생성
 y축 지정 불필요
 
-✅ 선 그래프 (시계열 데이터)
+3. 선 그래프 (시계열 데이터)
 ggplot(data = economics, aes(x = date, y = unemploy)) +
   geom_line()
 
 geom_line() : 시계열 데이터(시간의 흐름에 따른 값 변화)를 선으로 연결
 경제 지표, 주가 등 시계열 자료 시각화에 유용
 
-✅ 상자 그림 (Boxplot)
+4. 상자 그림 (Boxplot)
 ggplot(data = mpg, aes(x = drv, y = hwy)) +
   geom_boxplot()
 
 각 drv(구동방식) 그룹별 hwy(고속도로 연비)의 분포를 시각화
 이상치 탐지, 중위수, 사분위수 등 확인 가능
-
-🔎 요약: ggplot2 주요 시각화 함수
-| 그래프 유형 | 함수               | 설명                  |
-| ------ | ---------------- | ------------------- |
-| 산점도    | `geom_point()`   | 두 변수의 관계 (분산, 패턴 등) |
-| 막대그래프① | `geom_col()`     | 직접 계산된 값을 막대로 표현    |
-| 막대그래프② | `geom_bar()`     | 범주형 변수의 빈도 계산 후 시각화 |
-| 선 그래프  | `geom_line()`    | 시계열 변화 흐름 표현        |
-| 상자 그림  | `geom_boxplot()` | 그룹별 분포 및 이상치 표현     |
