@@ -1,4 +1,4 @@
-🔧 1. KoNLP 패키지 설치 및 준비
+1. KoNLP 패키지 설치 및 준비
 # 1-1. Java 및 rJava 설치 (JDK 필요)
 install.packages("multilinguer")  # JDK 자동 설치 도구
 library(multilinguer)
@@ -15,7 +15,8 @@ library(KoNLP)
 # 1-4. 형태소 분석용 사전 설정 (NIA 사전 사용)
 useNIADic()
 
-🎤 2. 텍스트 마이닝 실습: 힙합 가사 분석
+
+2. 텍스트 마이닝 실습: 힙합 가사 분석
 # 2-1. 텍스트 파일 불러오기
 txt <- readLines("C:/Users/sonhy/OneDrive/바탕 화면/코딩/R/데이터 분석/hiphop.txt")
 
@@ -33,7 +34,8 @@ df_word <- filter(df_word, nchar(word) >= 2)     # 2글자 이상만 추출
 # 2-4. 상위 20개 단어 추출
 top_20 <- df_word %>% arrange(desc(freq)) %>% head(20)
 
-☁️ 3. 워드 클라우드 시각화
+
+3. 워드 클라우드 시각화
 install.packages("wordcloud")
 library(wordcloud)
 library(RColorBrewer)
@@ -50,7 +52,8 @@ wordcloud(words = df_word$word,
           scale = c(4, 0.3),
           colors = pal)
 
-🐦 4. 국정원 트윗 텍스트 마이닝
+
+4. 국정원 트윗 텍스트 마이닝
 # 4-1. 데이터 불러오기 및 전처리
 twitter <- read.csv("twitter.csv", header = TRUE, fileEncoding = "UTF-8")
 twitter <- rename(twitter, no = 번호, id = 계정이름, date = 작성일, tw = 내용)
@@ -75,7 +78,8 @@ ggplot(data = top20, aes(x = word, y = freq)) +
   scale_x_discrete(limit = order) +
   geom_text(aes(label = freq), hjust = 0.1)
 
-🌐 5. 트윗 워드 클라우드 시각화
+
+5. 트윗 워드 클라우드 시각화
 pal <- brewer.pal(9, "Blues")[5:9]
 set.seed(1234)
 
@@ -88,7 +92,7 @@ wordcloud(word = df_word$word,
           scale = c(6, 0.5),
           colors = pal)
 
-📌 참고 사항
+[참고 사항]
 useNIADic()을 실행하면 처음에는 시간이 다소 걸릴 수 있습니다.
 KoNLP는 Java 기반이라, JDK 버전과 rJava 설치 여부가 중요합니다.
 str_replace_all(txt, "\\w", " ")는 한글 단어를 제거할 수 있으므로, 일반적으로는 \\W 또는 [^가-힣] 사용을 권장합니다.
