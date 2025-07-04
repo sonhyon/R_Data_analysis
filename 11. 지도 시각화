@@ -52,7 +52,8 @@ ggChoropleth(data = korpop1,
              map = kormap1,
              interactive = TRUE)
 
-🧫 대한민국 시도별 결핵 환자 수 단계 구분도
+
+[대한민국 시도별 결핵 환자 수 단계 구분도]
 1. 결핵 데이터 확인 및 시각화
 str(tbc)  # NewPts: 결핵 신규 환자 수
 
@@ -62,7 +63,7 @@ ggChoropleth(data = tbc,
              interactive = TRUE)
 
 
-[참고 사항 요약]
+[참고 사항]
 ggChoropleth() 함수는 ggiraphExtra 패키지에서 제공되며, map_id로 지리 정보를 매칭합니다.
 미국 데이터는 state 이름을, 한국 데이터는 code 값을 기준으로 매칭합니다.
 interactive = TRUE 옵션을 통해 툴팁 기능과 마우스 반응형 지도가 생성됩니다.
