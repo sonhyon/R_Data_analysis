@@ -1,4 +1,4 @@
-- 국민복지패널 데이터 분석 요약 정리
+[국민복지패널 데이터 분석 요약 정리]
 1. 패키지 설치 및 데이터 불러오기
 install.packages("foreign")
 library(foreign); library(dplyr); library(ggplot2); library(readxl)
@@ -8,11 +8,13 @@ welfare <- raw_welfare
 
 .sav(SPSS) 파일을 R에서 불러옴
 
+
 2. 데이터 구조 파악
 head(welfare); tail(welfare); View(welfare)
 dim(welfare); str(welfare); summary(welfare)
 
 데이터의 크기, 변수 구조, 요약통계 확인
+
 
 3. 변수명 변경
 welfare <- rename(welfare,
@@ -20,11 +22,13 @@ welfare <- rename(welfare,
   religion = h10_g11, income = p1002_8aq1,
   code_job = h10_eco9, code_region = h10_reg7)
 
-코드로 되어 있는 변수명을 의미 있는 이름으로 바꿈
+**코드로 되어 있는 변수명을 의미 있는 이름으로 바꿈**
+
 
 4. 성별 변수 전처리
 welfare$sex <- ifelse(welfare$sex == 9, NA, welfare$sex)
 welfare$sex <- ifelse(welfare$sex == 1, "male", "female")
+
 
 5. 월급 변수 전처리
 summary(welfare$income)
@@ -43,14 +47,14 @@ sex_income <- welfare %>%
 ggplot(sex_income, aes(x = sex, y = mean_income)) +
   geom_col()
 
+
 6. 나이 변수 생성 및 전처리
 welfare$birth <- ifelse(welfare$birth == 9999, NA, welfare$birth)
 welfare$age <- 2015 - welfare$birth + 1
 qplot(welfare$age)
 
-출생연도 → 나이 계산
-9999는 결측 → NA 처리
-
+# 출생연도 → 나이 계산
+# 9999는 결측 → NA 처리
 
 [나이와 월급 관계]
 age_income <- welfare %>%
@@ -61,7 +65,7 @@ age_income <- welfare %>%
 ggplot(age_income, aes(x = age, y = mean_income)) +
   geom_line()
 
-나이별 월급 평균 추세 확인 가능
+**나이별 월급 평균 추세 확인 가능**
 
 
 [연령대 파생 변수 생성 및 분석]
@@ -79,7 +83,7 @@ ggplot(ageg_income, aes(x = ageg, y = mean_income)) +
   scale_x_discrete(limits = c("young", "middle", "old"))
 
 young/middle/old 세 연령대 구분
-연령대별 월급 비교
+**연령대별 월급 비교**
 
 
 [연령대 및 성별 월급 차이]
@@ -107,7 +111,7 @@ ggplot(top10, aes(x = reorder(job, mean_income), y = mean_income)) +
   geom_col() +
   coord_flip()
 
-직업별 월급 평균 상위 10개 직업 시각화 (막대 + 회전)
+**직업별 월급 평균 상위 10개 직업 시각화 (막대 + 회전)**
 
 
 [성별 직업 빈도]
@@ -122,7 +126,7 @@ ggplot(job_male, aes(x = reorder(job, n), y = n)) +
   geom_col() +
   coord_flip()
 
-남성 기준 빈도수 높은 직업 Top 10
+**남성 기준 빈도수 높은 직업 Top 10**
 
 
 [종교 유무에 따른 이혼율]
@@ -135,7 +139,7 @@ religion_marriage <- welfare %>%
 ggplot(religion_marriage, aes(x = ageg, y = pct, fill = religion)) +
   geom_col(position = "dodge")
 
-종교 유무에 따른 이혼 비율 시각화
+**종교 유무에 따른 이혼 비율 시각화**
 ※ group_marriage는 미리 생성되어 있어야 함
 
 
@@ -156,5 +160,4 @@ ggplot(region_ageg, aes(x = region, y = pct, fill = ageg)) +
   coord_flip() +
   scale_x_discrete(limits = order)
 
-지역별 고령자 비율 순으로 정렬
-각 지역에서 연령대 비율 비교 가능
+**지역별 고령자 비율 순으로 정렬 / 각 지역에서 연령대 비율 비교 가능**
