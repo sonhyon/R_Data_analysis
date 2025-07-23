@@ -27,6 +27,7 @@ exam[c(3, 8, 5), "math"] <- NA  # exam 데이터에서 특정 행의 math에 NA 
 mean(exam$math, na.rm=T)
 exam$math <- ifelse(is.na(exam$math( ,55, exam$math) # 평균값으로 결측치 대체하기
 
+
 2. 이상치(Outliers) 처리
 - 범주형 변수의 이상치
 table(outlier$sex)    # sex 변수의 값 분포 확인
@@ -49,13 +50,3 @@ mpg$hwy <- ifelse(mpg$hwy < 12 | mpg$hwy > 37, NA, mpg$hwy)  # hwy에서 이상�
 mpg %>%
   group_by(drv) %>%
   summarise(mean_hwy = mean(hwy, na.rm = TRUE))  # 결측치 제외하고 평균 계산
-
-- 정리
-| 처리 항목         | 방법                              |                      |
-| ------------- | ------------------------------- | -------------------- |
-| 결측치 확인        | `is.na()`, `table(is.na())`     |                      |
-| 결측치 제거        | `filter(!is.na())`, `na.omit()` |                      |
-| 결측치 대체        | `ifelse(is.na(var), 값, var)`    |                      |
-| 이상치 확인        | `boxplot()`, `boxplot()$stats`  |                      |
-| 이상치 NA 처리     | \`ifelse(var < 하한               | var > 상한, NA, var)\` |
-| 통계 계산 시 NA 제외 | `mean(var, na.rm = TRUE)`       |                      |
