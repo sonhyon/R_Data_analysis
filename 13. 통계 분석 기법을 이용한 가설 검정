@@ -13,9 +13,9 @@ table(mpg_diff$class)  # 각 그룹 관측치 확인
 
 - 독립표본 t-검정 (등분산 가정)
 t.test(data = mpg_diff, cty ~ class, var.equal = TRUE)
-
 ▶ cty ~ class: 도시 연비(cty)가 자동차 종류(class)에 따라 차이가 있는지 검정
 ▶ var.equal = TRUE: 두 집단의 분산이 같다고 가정 (등분산 가정)
+
 
 2. 일반 휘발유 vs 고급 휘발유의 도시 연비 비교
 mpg_diff2 <- mpg %>%
@@ -25,7 +25,6 @@ mpg_diff2 <- mpg %>%
 table(mpg_diff2$fl)
 
 t.test(data = mpg_diff2, cty ~ fl, var.equal = TRUE)
-
 ▶ 연료 종류(fl)에 따라 도시 연비(cty)가 다른지 검정
 
 
@@ -33,7 +32,6 @@ t.test(data = mpg_diff2, cty ~ fl, var.equal = TRUE)
 실업자 수 vs 개인 소비 지출
 economics <- as.data.frame(ggplot2::economics)
 cor.test(economics$unemploy, economics$pce)
-
 ▶ cor.test()는 **상관계수 + 유의성 검정(p-value)**까지 제공
 상관계수(cor)는 -1 ~ +1 사이
 p-value가 0.05 미만이면 유의미한 상관관계로 해석
@@ -64,6 +62,5 @@ corrplot(car_cor,
          tl.col = "black",       # 변수명 색상
          tl.srt = 45,            # 변수명 회전 각도
          diag = FALSE)           # 대각선 제거
-
 ▶ 색이 진할수록 상관성이 높고, 음수-양수 방향성도 직관적으로 표현
 ▶ 변수 간 관계를 빠르게 파악하는 데 유용
